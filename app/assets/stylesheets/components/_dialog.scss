@@ -1,0 +1,21 @@
+.dialog {
+  background-color: #ffedd3;
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #c8c8c8;
+  font-weight: 400;
+  position: relative;
+}
+
+.dialog:before {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  height: 15px;
+  width: 15px;
+  background-color: #ffedd3;
+  transform: rotate(45deg);
+  border-bottom: 1px solid #c8c8c8;
+  border-right: 1px solid #c8c8c8;
+  border-bottom-right-radius: 2px;
+}

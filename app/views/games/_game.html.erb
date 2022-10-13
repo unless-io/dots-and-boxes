@@ -1,0 +1,52 @@
+<div 
+  data-size="10" 
+  data-controller="game" 
+  data-player-one="<%= @game.player_1 %>" 
+  data-player-two="<%= @game.player_2 %>"
+  data-game-id="<%= @game.hashid %>"
+  class="game"
+>
+  <div class="player-bar">
+    <div class="top">
+      <div class="player-one">
+        <span data-game-target="playerOneName"></span>
+        <span class="score" data-game-target="playerOneScore">0</span>
+      </div>
+      <div class="player-two">
+        <span class="score" data-game-target="playerTwoScore">0</span>
+        <span data-game-target="playerTwoName"></span>
+      </div>
+    </div>
+  </div>
+  <div id="playing-field">
+    <% 10.times do |row_index| %>
+      <div class="field-row">
+        <% 10.times do |column_index| %>
+          <div class="field-column">
+            <input 
+              type="checkbox" 
+              id="<%= "input-#{row_index}-#{column_index}" %>"
+              class="d-none"
+              data-row="<%= row_index %>" 
+              data-column="<%= column_index %>"
+              data-action="click->game#handleMove"
+            >
+            <label for="<%= "input-#{row_index}-#{column_index}" %>"></label>
+            <span class="right"></span>
+            <span class="below"></span>
+            <span class="complete"></span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div>
+    <p class="dialog" data-game-target="display">
+    </p>
+  </div>
+  <%= simple_form_for @game, remote: true do |f| %>
+    <%= f.input :state, as: :hidden, input_html: { 'data-game-target': 'state' } %>
+    <%= f.input :last_turn, as: :hidden, input_html: { 'data-game-target': 'turn'  } %>
+    <%= f.submit "Submit your move", class: "d-none btn-main", data: { "action": "click->game#handleSubmit", "game-target": "button" } %>
+  <% end %>
+</div>

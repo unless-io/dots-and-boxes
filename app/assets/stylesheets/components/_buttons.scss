@@ -1,0 +1,18 @@
+.btn-main {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  background-color: var(--p1);
+  font-weight: 600;
+  color: black;
+  border-radius: 3px;
+}
+
+.current-p1 .btn-main {
+  background-color: var(--p1);
+}
+
+.current-p2 .btn-main {
+  background-color: var(--p2);
+}

@@ -1,0 +1,39 @@
+.player-bar .top {
+  background-color: #b7b7b7;
+  color: black;
+  border: 1px solid #8c8c8c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.player-bar .top .score {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 3px solid black;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  color: black;
+  font-weight: 600;
+}
+
+.player-bar .top > div {
+  flex-basis: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.game .player-one .score {
+  border-color: var(--p1);
+}
+
+.game .player-two .score {
+  border-color: var(--p2);
+}
