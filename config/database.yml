@@ -84,3 +84,4 @@ production:
   database: <%= ENV['DATABASE_URL'] %>
   username: dotsandboxes
   password: <%= ENV["DOTSANDBOXES_DATABASE_PASSWORD"] %>
+  port: 10000
