@@ -9,7 +9,10 @@ export default class extends Controller {
     "playerOneScore", 
     "playerTwoScore",
     "playerOneName",
-    "playerTwoName"
+    "playerTwoName",
+    "winMessage",
+    "form",
+    "inviteLink"
   ]
 
   connect() {
@@ -17,30 +20,59 @@ export default class extends Controller {
     this.playerOne = this.element.dataset.playerOne
     this.playerTwo = this.element.dataset.playerTwo
     this.gameId = this.element.dataset.gameId
+    this.checkInvite()
     this.currentPlayer = this.setCurrentPlayer()
-    this.element.classList.add(this.currentPlayer === this.playerOne ? 'current-p1' : 'current-p2')
     this.notAPlayer = false
-
+    
     if (this.stateTarget.value !== '') {
       this.game = JSON.parse(this.stateTarget.value)
       this.repopulateBoard()
     } else {
       this.populateBoard()
     }
+    this.element.classList.add(`current-${this.displayCurrentPlayer(this.currentPlayer)}`)
     this.displayTurn()
     this.updateScore()
+    this.checkIfComplete()
+  }
+
+  displayCurrentPlayer(player) {
+    this.checkMoveNumber()
+
+    if (player === this.playerOne) {
+      return 'p1'
+    } else if (player === this.playerTwo) {
+      return 'p2'
+    } else if (player === undefined && this.moveNumber === 1) {
+      return 'p2'
+    } else if (player === undefined && this.moveNumber === 0) {
+      return 'p1'
+    }
+
+  }
+
+  checkInvite() {
+    if (this.getCookie(this.gameId) !== 'undefined') return;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const playerId = urlParams.get('invite')
+    if (playerId) {
+      this.updateCookie(this.gameId, playerId)
+    }
   }
 
   displayTurn() {
     if (this.canMove()) {
       this.displayTarget.innerHTML = "It is your turn"
       this.buttonTarget.classList.remove('d-none')
+      this.buttonTarget.classList.remove('disabled')
     } else if (this.notAPlayer) {
       this.displayTarget.innerHTML = "You are not a player in this game"
       this.buttonTarget.classList.add('d-none')
+      this.buttonTarget.classList.add('disabled')
     } else {
       this.displayTarget.innerHTML = "Waiting for the other player..."
-      this.buttonTarget.classList.add('d-none')
+      this.buttonTarget.classList.add('disabled')
     }
   }
 
@@ -54,6 +86,7 @@ export default class extends Controller {
       }
       game.push(row)
     }
+    console.log(game)
     this.game = game
   }
 
@@ -90,15 +123,33 @@ export default class extends Controller {
 
     if (input.checked && this.choice) {
       this.choice.checked = false
+      game[Number.parseInt(this.choice.dataset.row)][Number.parseInt(this.choice.dataset.column)]['value'] = false
+      delete game[Number.parseInt(this.choice.dataset.row)][Number.parseInt(this.choice.dataset.column)]['move']
       this.choice = input
+      game[row][column]['value'] = true
+      game[row][column]['move'] = this.currentPlayer
     } else if (input.checked) {
       this.choice = input
+      game[row][column]['value'] = true
+      game[row][column]['move'] = this.currentPlayer
     } else {
+      game[row][column]['value'] = false
+      delete game[row][column]['move']
       this.choice = undefined
     }
-    game[row][column]['value'] = true
-    game[row][column]['move'] = this.currentPlayer
     this.updateField(game)
+  }
+
+  copyLink(event) {
+    event.preventDefault()
+    const button = event.currentTarget
+    button.setAttribute("data-balloon-visible", true)
+    button.setAttribute("data-balloon-pos", 'left')
+    navigator.clipboard.writeText(button.href);
+    setTimeout(() => {
+      button.removeAttribute("data-balloon-visible")
+      button.removeAttribute("data-balloon-pos")
+    }, 1000)
   }
 
   handleSubmit(event) {
@@ -227,7 +278,7 @@ export default class extends Controller {
         let belowComplete = false
         let belowRightComplete = false
         input.parentElement.classList = 'field-column'
-        input.parentElement.classList.add(column['move'] === this.playerOne ? 'p1' : 'p2' )
+        input.parentElement.classList.add(`${this.displayCurrentPlayer(column['move'])}`)
 
         // CHECK FIELD TO THE RIGHT
         const fieldRight = game[rowIndex][columnIndex + 1]
@@ -255,8 +306,7 @@ export default class extends Controller {
           } else if (this.playerTwo === column['conquered']) {
             input.parentElement.classList.add('win-p2')
           } else {
-            const current = this.currentPlayer === this.playerOne ? 'p1' : 'p2' 
-            input.parentElement.classList.add(`win-${current}`)
+            input.parentElement.classList.add(`win-${`${this.displayCurrentPlayer(this.currentPlayer)}`}`)
           }
         }
       })
@@ -273,9 +323,50 @@ export default class extends Controller {
         playerTwoScore += 1
       }
     });
-    this.playerOneScoreTarget.innerHTML = playerOneScore
-    this.playerOneNameTarget.innerHTML = this.currentPlayer === this.playerOne ? 'Player 1' : 'Player 2'
-    this.playerTwoScoreTarget.innerHTML = playerTwoScore
-    this.playerTwoNameTarget.innerHTML = this.currentPlayer === this.playerTwo ? 'Player 1' : 'Player 2'  }
+    this.playerOneScore = playerOneScore
+    this.playerTwoScore = playerTwoScore
+
+
+    if (this.currentPlayer === this.playerOne) {
+      this.playerOneScoreTarget.innerHTML = playerOneScore
+      this.playerOneNameTarget.innerHTML = 'Player 1'
+      this.playerOneScoreTarget.classList.add('p1')
+      this.playerTwoScoreTarget.innerHTML = playerTwoScore
+      this.playerTwoNameTarget.innerHTML = 'Player 2'
+      this.playerTwoScoreTarget.classList.add('p2')
+    } else if (this.currentPlayer === this.playerTwo) {
+      this.playerOneScoreTarget.innerHTML = playerTwoScore
+      this.playerOneNameTarget.innerHTML = 'Player 2'
+      this.playerOneScoreTarget.classList.add('p2')
+      this.playerTwoScoreTarget.innerHTML = playerOneScore
+      this.playerTwoNameTarget.innerHTML = 'Player 1'
+      this.playerTwoScoreTarget.classList.add('p1')
+    } else {
+      this.playerOneScoreTarget.innerHTML = playerOneScore
+      this.playerOneNameTarget.innerHTML = 'Player 1'
+      this.playerOneScoreTarget.classList.add('p1')
+      this.playerTwoScoreTarget.innerHTML = playerTwoScore
+      this.playerTwoNameTarget.innerHTML = 'Player 2'
+      this.playerTwoScoreTarget.classList.add('p2')
+    }
+
+   }
+   checkIfComplete() {
+    const indexOfFalse = this.game.flat().findIndex(column => column['value'] !== true)
+    if (indexOfFalse === -1) {
+      // GAME COMPLETE
+      if (this.playerOneScore > this.playerTwoScore) {
+        this.winMessageTarget.querySelector('h2').innerHTML = "Player 1 wins"
+      } else {
+        this.winMessageTarget.querySelector('h2').innerHTML = "Player 2 wins"
+      }
+      this.winMessageTarget.classList.remove('d-none')
+      this.displayTarget.classList.add('d-none')
+      this.formTarget.classList.add('d-none')
+      this.inviteLinkTarget.classList.add('d-none')
+      document.querySelector('#playing-field').classList.add('game-over')
+
+    }
+   }
 
 }

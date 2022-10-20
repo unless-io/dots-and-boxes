@@ -1,7 +1,7 @@
 .player-bar .top {
-  background-color: #b7b7b7;
-  color: black;
-  border: 1px solid #8c8c8c;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--light-gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,13 +12,14 @@
 .player-bar .top .score {
   width: 25px;
   height: 25px;
-  border-radius: 50%;
-  border: 3px solid black;
+  font-size: 12px;
+  border-radius: 3px;
+  border: 3px solid var(--foreground);
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
-  color: black;
+  background-color: var(--background);
+  color: var(--foreground);
   font-weight: 600;
 }
 
@@ -27,13 +28,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: 600;
 }
 
 
-.game .player-one .score {
+.game .score.p1 {
   border-color: var(--p1);
 }
 
-.game .player-two .score {
+.game .score.p2 {
   border-color: var(--p2);
 }

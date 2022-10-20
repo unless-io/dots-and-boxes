@@ -31,7 +31,9 @@
               data-column="<%= column_index %>"
               data-action="click->game#handleMove"
             >
-            <label for="<%= "input-#{row_index}-#{column_index}" %>"></label>
+            <label for="<%= "input-#{row_index}-#{column_index}" %>">
+              <span></span>
+            </label>
             <span class="right"></span>
             <span class="below"></span>
             <span class="complete"></span>
@@ -44,9 +46,21 @@
     <p class="dialog" data-game-target="display">
     </p>
   </div>
-  <%= simple_form_for @game, remote: true do |f| %>
+  <div class="win-message d-none" data-game-target="winMessage">
+    <h2>
+      Player one wins
+    </h2>
+  </div>
+  <%= simple_form_for @game, remote: true, html: { data: { "game-target": 'form' } } do |f| %>
     <%= f.input :state, as: :hidden, input_html: { 'data-game-target': 'state' } %>
     <%= f.input :last_turn, as: :hidden, input_html: { 'data-game-target': 'turn'  } %>
-    <%= f.submit "Submit your move", class: "d-none btn-main", data: { "action": "click->game#handleSubmit", "game-target": "button" } %>
+    <%= f.submit "Submit your move", class: "btn-main disabled", data: { "action": "click->game#handleSubmit", "game-target": "button" } %>
+  <% end %>
+  <% if @current_player %>
+    <div class="text-end">
+      <%= link_to "#{request.base_url}#{request.path}?invite=#{@other_player}", class: "mt-3 d-inline-block", data: { action: "click->game#copyLink", "game-target": "inviteLink" }, "aria-label": "Copied link!" do %>
+        Invite other player &rarr;
+      <% end %>
+    </div>
   <% end %>
 </div>

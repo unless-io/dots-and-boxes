@@ -1,9 +1,9 @@
 .game {
   --field-size: 30px;
-  --p1: #937DC2;
-  --p2: #FF9494;
-  --lines: black;
-  --circles: #b4aaaa;
+  --p1: var(--accent-one);
+  --p2: var(--accent-two);
+  --lines: var(--foreground-accent);
+  --circles: var(--light-gray);
 }
 
 #playing-field {
@@ -11,6 +11,11 @@
   grid-auto-rows: auto;
   gap: 10px;
   margin: 10px 0;
+}
+
+#playing-field.game-over {
+  filter: blur(2px);
+  opacity: 0.7;
 }
 
 #playing-field .field-row {
@@ -30,21 +35,30 @@
 }
 
 #playing-field .field-row .field-column input ~ label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#playing-field .field-row .field-column input ~ label span {
+  display: block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   padding: 5px;
-  border: 2px solid white;
+  border: 2px solid var(--background);
   box-shadow: 0px 0px 0px 2px var(--circles);
   z-index: 5;
   position: relative;
 }
 
-#playing-field .field-row .field-column input:checked ~ label {
-  box-shadow: 0px 0px 0px 2px black;
+#playing-field .field-row .field-column input:checked ~ label span {
+  box-shadow: 0px 0px 0px 2px var(--foreground-accent);
 }
 
-#playing-field .field-row .field-column input:checked ~ label:before {
+#playing-field .field-row .field-column input:checked ~ label span:before {
   content: "";
   position: absolute;
   top: 0;
@@ -84,12 +98,12 @@
 }
 
 #playing-field .field-row .field-column.field-complete.win-p1 input:checked ~ span.complete,
-#playing-field .field-row .field-column.p1 input:checked ~ label:before {
+#playing-field .field-row .field-column.p1 input:checked ~ label span:before {
   background-color: var(--p1);
 }
 
 #playing-field .field-row .field-column.field-complete.win-p2 input:checked ~ span.complete,
-#playing-field .field-row .field-column.p2 input:checked ~ label:before {
+#playing-field .field-row .field-column.p2 input:checked ~ label span:before {
   background-color: var(--p2);
 }
 
@@ -102,12 +116,13 @@
   animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-#playing-field .field-row .field-column input:checked ~ label:before {
+#playing-field .field-row .field-column input:checked ~ label span:before {
   animation-name: zipIn;
   animation-duration: 200ms;
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
 
 @keyframes bounceIn {
   0% {

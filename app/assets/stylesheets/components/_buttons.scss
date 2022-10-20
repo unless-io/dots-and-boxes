@@ -9,10 +9,34 @@
   border-radius: 3px;
 }
 
+.btn-main.disabled {
+  filter: grayscale(80%);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 .current-p1 .btn-main {
   background-color: var(--p1);
 }
 
 .current-p2 .btn-main {
   background-color: var(--p2);
+}
+
+.color-mode-toggle {
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  font-size: 22px;
+}
+
+.color-mode-toggle .fa-sun {
+  --fa-primary-color: #f2f208;
+  --fa-secondary-color: #ff6100;
+}
+
+.color-mode-toggle .fa-moon-stars {
+  --fa-primary-color: #9d9dff;
+  --fa-secondary-color: #fff800;
+  --fa-secondary-opacity: 1;
 }

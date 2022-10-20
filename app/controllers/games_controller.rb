@@ -18,6 +18,10 @@ class GamesController < ApplicationController
   end
 
   def show
+    @current_player = cookies[params[:id]]
+    if @current_player
+      @other_player = (@current_player == @game.player_1 ? @game.player_2 : @game.player_1)
+    end
   end
 
   private

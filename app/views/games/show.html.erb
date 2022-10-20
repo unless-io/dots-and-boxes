@@ -1,10 +1,17 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <div class="content-container">
+      <div class="content-container relative">
         <h1>
           Dots and boxes
         </h1>
+        <%= link_to game_path(@game, theme: (cookies[:theme].to_s == 'dark' ? 'light' : 'dark')), data: { turbo: false }, class: "color-mode-toggle" do %> 
+          <% if cookies[:theme].to_s == 'dark' %>
+            <i class="fa-duotone fa-moon-stars"></i>
+          <% else %>
+            <i class="fa-duotone fa-sun"></i>
+          <% end %>
+        <% end %>
         <%= render partial: "game" %>
       </div>
     </div>

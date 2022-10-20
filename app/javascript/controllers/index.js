@@ -9,3 +9,6 @@ application.register("hello", HelloController)
 
 import GameController from "./game_controller"
 application.register("game", GameController)
+
+import SetColorSchemeController from "./set_color_scheme_controller"
+application.register("set-color-scheme", SetColorSchemeController)
