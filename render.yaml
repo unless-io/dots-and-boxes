@@ -1,7 +1,7 @@
 databases:
   - name: dots-and-boxes
     databaseName: dots-and-boxes
-    user: dots-and-boxes
+    user: mysite
     plan: free
 
 services:
